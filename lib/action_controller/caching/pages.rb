@@ -170,6 +170,17 @@ module ActionController
       def cache_page(content = nil, options = nil, gzip = Zlib::BEST_COMPRESSION)
         return unless self.class.perform_caching && caching_allowed?
 
+        caching_mechanism(content, options, gzip)
+      end
+
+
+      # Make page cache manually no matter what request method is
+      def compile_page(content = nil, options = nil, gzip = Zlib::BEST_COMPRESSION)
+        caching_mechanism(content, options, gzip)
+      end
+
+      def caching_mechanism(content = nil, options = nil, gzip = Zlib::BEST_COMPRESSION)
+
         path = case options
           when Hash
             url_for(options.merge(only_path: true, format: params[:format]))
